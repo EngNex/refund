@@ -5,9 +5,9 @@ const expense = document.getElementById("expense");
 const category = document.getElementById("category");
 
 //Seleciona os elementos da lista
-
 const expenseList = document.querySelector("ul");
-const expenseQuantity = document.querySelector("aside header p span")
+const expensesQuantity = document.querySelector("aside header p span")
+const expensesTotal = document.querySelector("aside header h2")
 
 //adiciona um evento de input para limpar o input ao digitar e deixar somente numeros
 amount.oninput = () => {
@@ -108,7 +108,43 @@ try{
     const items = expenseList.children
 
     //atualiza a quantidade de itens na lista 
-    expenseQuantity.textContent = `${items.length} ${items.length > 1 ? "despesas" : "despesa"}`
+    expensesQuantity.textContent = `${items.length} ${items.length > 1 ? "despesas" : "despesa"}`
+
+//variavel para incrementar o total de despesas
+let total = 0
+
+//percore cada item que é adicionado na lista
+for(let item = 0; item < items.length; item++){
+  const itemAmount = items[item].querySelector(".expense-amount")
+
+  //remover caracteres para fazer a concatenação dos valores
+  let value = itemAmount.textContent.replace(/[^\d,]/g, "").replace(",", ".")
+
+  //converter o valor para float
+  value = parseFloat(value)
+
+  //verifica se é numero valido
+  if(isNaN(value)){
+    return alert("Digite um valor valido")
+  }
+
+  //incrementa a soma do valores das despesas
+  total += Number(value)
+}
+
+
+//criando a span para formatando o R$
+const symbolBRL = document.createElement("small") 
+symbolBRL.textContent = "R$"
+ 
+//formata o valor e remove o R$ que sera exibido pela small com conteudo estilizado
+total = formatCurrenciesBRL(total).toUpperCase().replace("R$", "")
+
+//limpa o conteudo do elemento
+expensesTotal.innerHTML = ""
+
+//adiciona o simbolo e o valor na 
+expensesTotal.append(symbolBRL, total)
 
 }catch (error){
     console.log(error)
